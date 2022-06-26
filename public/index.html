@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Log Collection</title>
+</head>
+<body>
+    <h1>Log Collection</h1>
+    <div id="form">
+        <label>File Name:</label><input type="text" id="txt_file_name" />
+        <label>Number of Records:</label><input type="text" id="txt_num_records" />
+        <label>Filter By:</label><input type="text" id="txt_filter_by" />
+        <button id="btn_fetch">Fetch</button>
+    </div>
+    <br />
+    <div id="data_area" rows="50" cols="150"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+        $(document).ready(() => {
+            $("#btn_fetch").on("click", () => {
+                $("#data_area").text("");
+                const fileName = $("#txt_file_name").val();
+                const numberOfRecords = $("#txt_num_records").val();
+                const filterBy = $("#txt_filter_by").val();
+
+                if(!fileName || fileName.trim() === "") {
+                    alert("File Name should not be empty");
+                    return;
+                }
+
+                fetchFileData(fileName, numberOfRecords, filterBy);
+            });
+        });
+
+        const fetchFileData = (fileName, numberOfRecords, filterBy) => {
+            let query = "?";
+            if(numberOfRecords) {
+                query += "last_n=" + numberOfRecords + "&";
+            }
+            if(filterBy) {
+                query += "filter_by=" + filterBy;
+            }
+
+            $.get("/get_logs/" + fileName + query, (response) => {
+                for(const line of response) {
+                    $("#data_area").append($('<br /><div>').text(line));
+                }
+            })
+            .fail((error) => {
+                alert(error.responseJSON.errorMessage);
+            });
+        }
+    </script>
+</body>
+</html>
