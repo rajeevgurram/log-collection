@@ -16,7 +16,7 @@
         <button id="btn_fetch">Fetch</button>
     </div>
     <br />
-    <div id="data_area" rows="50" cols="150"></div>
+    <textarea disabled id="data_area" rows="50" cols="150"></textarea>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <script type="application/javascript">
@@ -47,7 +47,7 @@
 
             $.get("/get_logs/" + fileName + query, (response) => {
                 for(const line of response) {
-                    $("#data_area").append($('<br /><div>').text(line));
+                    $("#data_area").append(line.replaceAll(/[\<\>]/g, "") + "\n");
                 }
             })
             .fail((error) => {
