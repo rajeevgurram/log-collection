@@ -26,7 +26,7 @@
                 $("#data_area").text("");
                 const fileName = $("#txt_file_name").val();
                 const numberOfRecords = $("#txt_num_records").val();
-                const filterBy = $("#txt_filter_by").val();
+                const filterBy = encodeURIComponent($("#txt_filter_by").val());
                 const remoteMachines = $("#txt_remote_machines").val();
 
                 if(!fileName || fileName.trim() === "") {
