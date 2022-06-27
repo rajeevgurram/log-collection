@@ -10,9 +10,10 @@
 <body>
     <h1>Log Collection</h1>
     <div id="form">
-        <label>File Name:</label><input type="text" id="txt_file_name" />
-        <label>Number of Records:</label><input type="text" id="txt_num_records" />
-        <label>Filter By:</label><input type="text" id="txt_filter_by" />
+        <label>File Name:</label><input type="text" id="txt_file_name" name = "fileName"/>
+        <label>Number of Records:</label><input type="text" id="txt_num_records" name = "number of records"/>
+        <label>Filter By:</label><input type="text" id="txt_filter_by" name = "filter by"/>
+        <label>Remote Machines:</label><input type="text" id="txt_remote_machines" name = "remote machines"/>
         <button id="btn_fetch">Fetch</button>
     </div>
     <br />
@@ -26,28 +27,38 @@
                 const fileName = $("#txt_file_name").val();
                 const numberOfRecords = $("#txt_num_records").val();
                 const filterBy = $("#txt_filter_by").val();
+                const remoteMachines = $("#txt_remote_machines").val();
 
                 if(!fileName || fileName.trim() === "") {
                     alert("File Name should not be empty");
                     return;
                 }
 
-                fetchFileData(fileName, numberOfRecords, filterBy);
+                fetchFileData(fileName, numberOfRecords, filterBy, remoteMachines);
             });
         });
 
-        const fetchFileData = (fileName, numberOfRecords, filterBy) => {
+        const fetchFileData = (fileName, numberOfRecords, filterBy, remoteMachines) => {
             let query = "?";
             if(numberOfRecords) {
                 query += "last_n=" + numberOfRecords + "&";
             }
             if(filterBy) {
-                query += "filter_by=" + filterBy;
+                query += "filter_by=" + filterBy + "&";
+            }
+            if(remoteMachines) {
+                query += "remote_machines=" + remoteMachines;
             }
 
             $.get("/get_logs/" + fileName + query, (response) => {
-                for(const line of response) {
-                    $("#data_area").append(line.replaceAll(/[\<\>]/g, "") + "\n");
+                for(const machine in response) {
+                    $("#data_area").append("==========================================================================\n");
+                    $("#data_area").append("from " + machine +"\n");
+                    $("#data_area").append("==========================================================================\n");
+                    for (const line of response[machine]) {
+                        $("#data_area").append(line.replaceAll(/[\<\>]/g, "") + "\n");
+                    }
+                    $("#data_area").append("\n\n");
                 }
             })
             .fail((error) => {

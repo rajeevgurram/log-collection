@@ -39,6 +39,13 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>public</directory>
+                <targetPath>public</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

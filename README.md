@@ -25,7 +25,11 @@ mvn spring-boot:run
 
 http://localhost:8080/public/index.html
 
-```shell
-oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app
-```
+## For Distributed Log Fetching
+
+Assign unique server name to each instance
+- server.name = master
+
+Run multiple instances using different ports
+- java -Dserver.name=slave1 -Dserver.port=8070 -jar log-collection-0.0.1-SNAPSHOT.jar
 
