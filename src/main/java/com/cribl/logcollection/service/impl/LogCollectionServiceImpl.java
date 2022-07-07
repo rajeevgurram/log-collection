@@ -6,6 +6,8 @@ import com.cribl.logcollection.utils.ReverseFileReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -96,13 +98,15 @@ public class LogCollectionServiceImpl implements LogCollectionService {
                 try {
                     StringBuilder queryBuilder = new StringBuilder("?");
                     if(lastN != null) {
-                        queryBuilder.append("last_n=" + lastN + "&");
+                        queryBuilder.append("last_n=").append(lastN).append("&");
                     }
                     if(filterBy != null) {
-                        queryBuilder.append("filter_by=" + filterBy);
+                        queryBuilder.append("filter_by=").append(filterBy);
                     }
 
-                    return restTemplate.getForObject(new URI(machine + "/get_logs/" + fileName + queryBuilder), Map.class);
+                    return restTemplate.exchange(new URI(machine + "/get_logs/" + fileName + queryBuilder),
+                            HttpMethod.GET, null, new ParameterizedTypeReference<Map<String, List<String>>>(){})
+                            .getBody();
                 } catch (URISyntaxException e) {
                     log.error("Error occurred while fetching data from remote machine: {}", machine, e);
                     throw new RuntimeException(e);

@@ -17,7 +17,6 @@ public class ReverseFileReader {
     private long filePosition;
     private int bufPosition;
     private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    private byte lastLineBreak = '\n';
 
     public ReverseFileReader(final File file) throws IOException {
         randomAccessFile = new RandomAccessFile(file, "r");

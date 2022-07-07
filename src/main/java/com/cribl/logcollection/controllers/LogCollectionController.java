@@ -26,7 +26,7 @@ public class LogCollectionController {
         this.service = service;
     }
 
-    @GetMapping(value = "/{file_name}")
+    @GetMapping(value = "/{file_name}", produces = "application/json")
     public CompletableFuture<Map<String, List<String>>> getLogFileData(@PathVariable("file_name") final String fileName,
                                                                        @RequestParam("last_n") final Optional<Integer> lastN,
                                                                        @RequestParam(value = "filter_by", required = false) final String filterBy,
